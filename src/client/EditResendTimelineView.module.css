@@ -1,3 +1,16 @@
+/* Width/height include padding+border. */
+.root,
+.select,
+.versionsPanel,
+.turnsPanel,
+.versionButton,
+.messageCard,
+.textarea,
+.primaryButton,
+.secondaryButton {
+  box-sizing: border-box;
+}
+
 .root {
   display: flex;
   flex-direction: column;

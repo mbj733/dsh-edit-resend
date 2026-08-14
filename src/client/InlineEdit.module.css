@@ -1,3 +1,17 @@
+/* Width/height include padding+border — matches native DSW components. */
+.overlay,
+.panel,
+.title,
+.input,
+.footer,
+.hint,
+.actions,
+.save,
+.cancel,
+.iconButton {
+  box-sizing: border-box;
+}
+
 .iconButton {
   display: inline-flex;
   align-items: center;
