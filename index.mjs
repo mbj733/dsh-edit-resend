@@ -470,16 +470,6 @@ async function runOperation(ctx, operation) {
 				inverses.push(() => workspace.detachSession(childId));
 			}
 			for (const message of plan.queuedUsers) child.agent.followup(message);
-			try {
-				await inheritTitle(ctx, sourceId, child.agent.session);
-			} catch (error) {
-				ctx.logger.warn("edit-resend: inherit title failed: " + (error instanceof Error ? error.message : String(error)));
-			}
-			try {
-				await ctx.workspaceRegistry.archiveSession(sourceId);
-			} catch (error) {
-				ctx.logger.warn("edit-resend: archive source failed: " + (error instanceof Error ? error.message : String(error)));
-			}
 			rememberVersion(childId, plan.version);
 			inverses.length = 0;
 			return {
@@ -495,6 +485,24 @@ async function runOperation(ctx, operation) {
 			throw error;
 		}
 	});
+}
+/**
+* Post-edit finalization, run OFF the request's critical path: inherit the
+* source title and archive (soft-delete) the previous version so the sidebar
+* keeps a single conversation. Fire-and-forget; failures only warn.
+*/
+async function finalizeEdit(ctx, sourceId, childId) {
+	try {
+		const childSession = ctx.agents.get(childId)?.session;
+		if (childSession !== void 0) await inheritTitle(ctx, sourceId, childSession);
+	} catch (error) {
+		ctx.logger.warn("edit-resend: inherit title failed: " + (error instanceof Error ? error.message : String(error)));
+	}
+	try {
+		await ctx.workspaceRegistry.archiveSession(sourceId);
+	} catch (error) {
+		ctx.logger.warn("edit-resend: archive source failed: " + (error instanceof Error ? error.message : String(error)));
+	}
 }
 function ownVersion(header, store) {
 	return store[header.id];
@@ -677,7 +685,10 @@ async function handleRoute(ctx, request, response) {
 			return;
 		}
 		if (request.method === "POST") {
-			respondJson(response, 200, await runOperation(ctx, decodeOperation(await requestJson(request))));
+			const operation = decodeOperation(await requestJson(request));
+			const result = await runOperation(ctx, operation);
+			finalizeEdit(ctx, sessionIdOf(operation.sessionId), sessionIdOf(result.sessionId));
+			respondJson(response, 200, result);
 			return;
 		}
 		response.writeHead(405);

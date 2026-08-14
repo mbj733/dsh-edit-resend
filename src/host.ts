@@ -594,20 +594,6 @@ async function runOperation(ctx: Context, operation: EditResendOperation): Promi
       }
       for (const message of plan.queuedUsers) child.agent.followup(message)
 
-      // Keep a single conversation: soft-delete the previous version (archive)
-      // and inherit its title. Best-effort — a failure here must not roll back
-      // the already-committed edit.
-      try {
-        await inheritTitle(ctx, sourceId, child.agent.session)
-      } catch (error: unknown) {
-        ctx.logger.warn('edit-resend: inherit title failed: ' + (error instanceof Error ? error.message : String(error)))
-      }
-      try {
-        await ctx.workspaceRegistry.archiveSession(sourceId)
-      } catch (error: unknown) {
-        ctx.logger.warn('edit-resend: archive source failed: ' + (error instanceof Error ? error.message : String(error)))
-      }
-
       rememberVersion(childId, plan.version)
       inverses.length = 0
       return { sessionId: childId, queuedTurns: plan.queuedUsers.length }
@@ -620,6 +606,25 @@ async function runOperation(ctx: Context, operation: EditResendOperation): Promi
       throw error
     }
   })
+}
+
+/**
+ * Post-edit finalization, run OFF the request's critical path: inherit the
+ * source title and archive (soft-delete) the previous version so the sidebar
+ * keeps a single conversation. Fire-and-forget; failures only warn.
+ */
+async function finalizeEdit(ctx: Context, sourceId: SessionId, childId: SessionId): Promise<void> {
+  try {
+    const childSession = ctx.agents.get(childId)?.session
+    if (childSession !== undefined) await inheritTitle(ctx, sourceId, childSession)
+  } catch (error: unknown) {
+    ctx.logger.warn('edit-resend: inherit title failed: ' + (error instanceof Error ? error.message : String(error)))
+  }
+  try {
+    await ctx.workspaceRegistry.archiveSession(sourceId)
+  } catch (error: unknown) {
+    ctx.logger.warn('edit-resend: archive source failed: ' + (error instanceof Error ? error.message : String(error)))
+  }
 }
 
 // ── Timeline projection ──────────────────────────────────────────────────────
@@ -831,7 +836,11 @@ async function handleRoute(ctx: Context, request: HttpRequestLike, response: Htt
       return
     }
     if (request.method === 'POST') {
-      respondJson(response, 200, await runOperation(ctx, decodeOperation(await requestJson(request))))
+      const operation = decodeOperation(await requestJson(request))
+      const result = await runOperation(ctx, operation)
+      // Defer title-inherit + archive so the edit returns to the client quickly.
+      void finalizeEdit(ctx, sessionIdOf(operation.sessionId), sessionIdOf(result.sessionId))
+      respondJson(response, 200, result)
       return
     }
     response.writeHead(405)
