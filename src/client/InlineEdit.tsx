@@ -65,7 +65,7 @@ function mountEditor(block: EditableMessageBlock, edit: EditResendFace['edit'], 
   footer.className = STYLE.footer
   const hint = document.createElement('span')
   hint.className = STYLE.hint
-  hint.textContent = '从该消息之前分支重新生成，原版本保留'
+  hint.textContent = '从这条消息重新生成，旧版本自动归档'
   const actions = document.createElement('div')
   actions.className = STYLE.actions
   const save = document.createElement('button')

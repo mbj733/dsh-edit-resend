@@ -128,7 +128,7 @@ function MessageCard({
               onChange={(event) => { onTextChange(event.currentTarget.value) }}
             />
             <div className={styles['editorActions']}>
-              <span className={styles['editorHint']}>将从该回合之前分支，原版本保持不变。</span>
+              <span className={styles['editorHint']}>将从该回合重新生成，旧版本自动归档。</span>
               <button
                 type="button"
                 className={styles['primaryButton']}
@@ -192,7 +192,7 @@ export function EditResendTimelineView({
         <div>
           <h1 className={styles['title']}>编辑与重新发送</h1>
           <p className={styles['intro']}>
-            可编辑已发送的消息（含正在回复中的最后一条）：先点标题栏的「停止」，再编辑并重新发送。每次修改都保留原版本，可随时切回。
+            可编辑已发送的消息（含正在回复中的最后一条）：先点标题栏的「停止」，再编辑并重新发送。修改后会从该消息重新生成，旧版本自动归档，侧边栏只保留一个对话。
           </p>
         </div>
         <div className={styles['headerActions']}>

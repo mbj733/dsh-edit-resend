@@ -409,16 +409,16 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var InlineEdit_module_css_default = {
-			"input": "fVO5cq_input",
-			"cancel": "fVO5cq_cancel",
-			"panel": "fVO5cq_panel",
 			"actions": "fVO5cq_actions",
+			"hint": "fVO5cq_hint",
 			"overlay": "fVO5cq_overlay",
-			"save": "fVO5cq_save",
-			"iconButton": "fVO5cq_iconButton",
-			"title": "fVO5cq_title",
+			"panel": "fVO5cq_panel",
+			"input": "fVO5cq_input",
 			"footer": "fVO5cq_footer",
-			"hint": "fVO5cq_hint"
+			"save": "fVO5cq_save",
+			"cancel": "fVO5cq_cancel",
+			"iconButton": "fVO5cq_iconButton",
+			"title": "fVO5cq_title"
 		};
 		//#endregion
 		//#region src/client/InlineEdit.tsx
@@ -476,7 +476,7 @@ window.__ModuleLoader__.load({
 			footer.className = STYLE.footer;
 			const hint = document.createElement("span");
 			hint.className = STYLE.hint;
-			hint.textContent = "从该消息之前分支重新生成，原版本保留";
+			hint.textContent = "从这条消息重新生成，旧版本自动归档";
 			const actions = document.createElement("div");
 			actions.className = STYLE.actions;
 			const save = document.createElement("button");
@@ -654,11 +654,11 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendHeader_module_css_default = {
-			"counter": "k-Flkq_counter",
-			"iconButton": "k-Flkq_iconButton",
 			"root": "k-Flkq_root",
+			"iconButton": "k-Flkq_iconButton",
+			"stopButton": "k-Flkq_stopButton",
 			"rerollButton": "k-Flkq_rerollButton",
-			"stopButton": "k-Flkq_stopButton"
+			"counter": "k-Flkq_counter"
 		};
 		//#endregion
 		//#region src/client/EditResendHeader.tsx
@@ -742,56 +742,56 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendTimelineView_module_css_default = {
-			"versionButton": "dvKrZa_versionButton",
-			"notice": "dvKrZa_notice",
-			"title": "dvKrZa_title",
-			"turnTitle": "dvKrZa_turnTitle",
-			"effectControls": "dvKrZa_effectControls",
-			"turnPreview": "dvKrZa_turnPreview",
-			"headerActions": "dvKrZa_headerActions",
-			"versionsPanel": "dvKrZa_versionsPanel",
-			"messageCard": "dvKrZa_messageCard",
-			"count": "dvKrZa_count",
-			"cascadeField": "dvKrZa_cascadeField",
-			"messageList": "dvKrZa_messageList",
-			"columns": "dvKrZa_columns",
-			"versionDiff": "dvKrZa_versionDiff",
+			"versionTitle": "dvKrZa_versionTitle",
+			"effectButtons": "dvKrZa_effectButtons",
+			"effectDepth": "dvKrZa_effectDepth",
+			"turnList": "dvKrZa_turnList",
+			"primaryButton": "dvKrZa_primaryButton",
 			"kindBadge": "dvKrZa_kindBadge",
+			"select": "dvKrZa_select",
+			"messageTime": "dvKrZa_messageTime",
+			"messageText": "dvKrZa_messageText",
+			"pageHeader": "dvKrZa_pageHeader",
+			"versionList": "dvKrZa_versionList",
 			"editor": "dvKrZa_editor",
 			"editorActions": "dvKrZa_editorActions",
-			"pageHeader": "dvKrZa_pageHeader",
+			"editorHint": "dvKrZa_editorHint",
+			"turnSection": "dvKrZa_turnSection",
 			"status": "dvKrZa_status",
-			"turnList": "dvKrZa_turnList",
+			"versionsPanel": "dvKrZa_versionsPanel",
+			"columns": "dvKrZa_columns",
+			"subtitle": "dvKrZa_subtitle",
+			"versionDiff": "dvKrZa_versionDiff",
+			"pathBadge": "dvKrZa_pathBadge",
+			"turnPreview": "dvKrZa_turnPreview",
 			"turnHeader": "dvKrZa_turnHeader",
 			"error": "dvKrZa_error",
+			"effectControls": "dvKrZa_effectControls",
 			"currentBadge": "dvKrZa_currentBadge",
-			"textarea": "dvKrZa_textarea",
-			"versionTitle": "dvKrZa_versionTitle",
-			"versionItem": "dvKrZa_versionItem",
-			"editorHint": "dvKrZa_editorHint",
-			"effectButtons": "dvKrZa_effectButtons",
-			"sectionHeading": "dvKrZa_sectionHeading",
-			"intro": "dvKrZa_intro",
-			"select": "dvKrZa_select",
+			"messageCard": "dvKrZa_messageCard",
 			"versionMeta": "dvKrZa_versionMeta",
-			"openBadge": "dvKrZa_openBadge",
-			"secondaryButton": "dvKrZa_secondaryButton",
-			"primaryButton": "dvKrZa_primaryButton",
-			"versionList": "dvKrZa_versionList",
-			"pathBadge": "dvKrZa_pathBadge",
-			"messageText": "dvKrZa_messageText",
-			"messageTime": "dvKrZa_messageTime",
+			"headerActions": "dvKrZa_headerActions",
 			"turnsPanel": "dvKrZa_turnsPanel",
-			"root": "dvKrZa_root",
-			"versionDot": "dvKrZa_versionDot",
-			"subtitle": "dvKrZa_subtitle",
-			"versionMain": "dvKrZa_versionMain",
-			"versionLine": "dvKrZa_versionLine",
+			"count": "dvKrZa_count",
 			"messageHeader": "dvKrZa_messageHeader",
-			"turnSection": "dvKrZa_turnSection",
+			"versionButton": "dvKrZa_versionButton",
+			"versionItem": "dvKrZa_versionItem",
+			"cascadeField": "dvKrZa_cascadeField",
+			"openBadge": "dvKrZa_openBadge",
 			"empty": "dvKrZa_empty",
+			"secondaryButton": "dvKrZa_secondaryButton",
 			"textButton": "dvKrZa_textButton",
-			"effectDepth": "dvKrZa_effectDepth"
+			"turnTitle": "dvKrZa_turnTitle",
+			"title": "dvKrZa_title",
+			"root": "dvKrZa_root",
+			"intro": "dvKrZa_intro",
+			"messageList": "dvKrZa_messageList",
+			"versionLine": "dvKrZa_versionLine",
+			"versionMain": "dvKrZa_versionMain",
+			"notice": "dvKrZa_notice",
+			"versionDot": "dvKrZa_versionDot",
+			"textarea": "dvKrZa_textarea",
+			"sectionHeading": "dvKrZa_sectionHeading"
 		};
 		//#endregion
 		//#region src/client/EditResendTimelineView.tsx
@@ -920,7 +920,7 @@ window.__ModuleLoader__.load({
 						className: EditResendTimelineView_module_css_default["editorActions"],
 						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
 							className: EditResendTimelineView_module_css_default["editorHint"],
-							children: "将从该回合之前分支，原版本保持不变。"
+							children: "将从该回合重新生成，旧版本自动归档。"
 						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 							type: "button",
 							className: EditResendTimelineView_module_css_default["primaryButton"],
@@ -984,7 +984,7 @@ window.__ModuleLoader__.load({
 							children: "编辑与重新发送"
 						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 							className: EditResendTimelineView_module_css_default["intro"],
-							children: "可编辑已发送的消息（含正在回复中的最后一条）：先点标题栏的「停止」，再编辑并重新发送。每次修改都保留原版本，可随时切回。"
+							children: "可编辑已发送的消息（含正在回复中的最后一条）：先点标题栏的「停止」，再编辑并重新发送。修改后会从该消息重新生成，旧版本自动归档，侧边栏只保留一个对话。"
 						})] }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							className: EditResendTimelineView_module_css_default["headerActions"],
 							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", {
