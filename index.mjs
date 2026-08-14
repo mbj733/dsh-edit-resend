@@ -446,6 +446,13 @@ function rememberVersion(childId, version) {
 	store[childId] = version;
 	saveStore(store);
 }
+/** Best-effort: carry the source session's title over to the new version. */
+async function inheritTitle(ctx, sourceId, childSession) {
+	const sessionTitle = ctx.get("sessionTitle");
+	if (sessionTitle === void 0) return;
+	const snapshot = await ctx.sessionQuery.readTitle(sourceId);
+	if (snapshot?.title != null && snapshot.title.trim().length > 0) sessionTitle.rename(childSession, snapshot.title);
+}
 async function runOperation(ctx, operation) {
 	const sourceId = sessionIdOf(operation.sessionId);
 	return withSourceAgent(ctx, sourceId, async (source) => {
@@ -463,6 +470,16 @@ async function runOperation(ctx, operation) {
 				inverses.push(() => workspace.detachSession(childId));
 			}
 			for (const message of plan.queuedUsers) child.agent.followup(message);
+			try {
+				await inheritTitle(ctx, sourceId, child.agent.session);
+			} catch (error) {
+				ctx.logger.warn("edit-resend: inherit title failed: " + (error instanceof Error ? error.message : String(error)));
+			}
+			try {
+				await ctx.workspaceRegistry.archiveSession(sourceId);
+			} catch (error) {
+				ctx.logger.warn("edit-resend: archive source failed: " + (error instanceof Error ? error.message : String(error)));
+			}
 			rememberVersion(childId, plan.version);
 			inverses.length = 0;
 			return {

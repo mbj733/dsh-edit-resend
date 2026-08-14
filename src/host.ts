@@ -561,6 +561,20 @@ function rememberVersion(childId: SessionId, version: VersionRecord): void {
   saveStore(store)
 }
 
+interface SessionTitleService {
+  rename(session: Session, title: string): unknown
+}
+
+/** Best-effort: carry the source session's title over to the new version. */
+async function inheritTitle(ctx: Context, sourceId: SessionId, childSession: Session): Promise<void> {
+  const sessionTitle = ctx.get('sessionTitle') as unknown as SessionTitleService | undefined
+  if (sessionTitle === undefined) return
+  const snapshot = await ctx.sessionQuery.readTitle(sourceId) as unknown as { title?: string | null } | undefined
+  if (snapshot?.title != null && snapshot.title.trim().length > 0) {
+    sessionTitle.rename(childSession, snapshot.title)
+  }
+}
+
 async function runOperation(ctx: Context, operation: EditResendOperation): Promise<EditResendOperationResult> {
   const sourceId = sessionIdOf(operation.sessionId)
   return withSourceAgent(ctx, sourceId, async (source) => {
@@ -579,6 +593,20 @@ async function runOperation(ctx: Context, operation: EditResendOperation): Promi
         inverses.push(() => workspace.detachSession(childId))
       }
       for (const message of plan.queuedUsers) child.agent.followup(message)
+
+      // Keep a single conversation: soft-delete the previous version (archive)
+      // and inherit its title. Best-effort — a failure here must not roll back
+      // the already-committed edit.
+      try {
+        await inheritTitle(ctx, sourceId, child.agent.session)
+      } catch (error: unknown) {
+        ctx.logger.warn('edit-resend: inherit title failed: ' + (error instanceof Error ? error.message : String(error)))
+      }
+      try {
+        await ctx.workspaceRegistry.archiveSession(sourceId)
+      } catch (error: unknown) {
+        ctx.logger.warn('edit-resend: archive source failed: ' + (error instanceof Error ? error.message : String(error)))
+      }
 
       rememberVersion(childId, plan.version)
       inverses.length = 0
