@@ -20,6 +20,8 @@ const STYLE = {
   title: styles['title'] ?? '',
   input: styles['input'] ?? '',
   footer: styles['footer'] ?? '',
+  hint: styles['hint'] ?? '',
+  actions: styles['actions'] ?? '',
   iconButton: styles['iconButton'] ?? '',
   save: styles['save'] ?? '',
   cancel: styles['cancel'] ?? '',
@@ -61,18 +63,31 @@ function mountEditor(block: EditableMessageBlock, edit: EditResendFace['edit'], 
   input.value = block.text
   const footer = document.createElement('div')
   footer.className = STYLE.footer
+  const hint = document.createElement('span')
+  hint.className = STYLE.hint
+  hint.textContent = '从该消息之前分支重新生成，原版本保留'
+  const actions = document.createElement('div')
+  actions.className = STYLE.actions
   const save = document.createElement('button')
   save.className = STYLE.save
   save.textContent = '重新发送'
   const cancel = document.createElement('button')
   cancel.className = STYLE.cancel
   cancel.textContent = '取消'
-  footer.append(save, cancel)
+  actions.append(save, cancel)
+  footer.append(hint, actions)
   panel.append(title, input, footer)
   overlay.appendChild(panel)
   document.body.appendChild(overlay)
+  // Auto-grow the editor to fit its content (no oversized box for short text).
+  const autoSize = (): void => {
+    input.style.height = 'auto'
+    input.style.height = Math.min(input.scrollHeight, 360) + 'px'
+  }
+  input.addEventListener('input', autoSize)
   input.focus()
   input.setSelectionRange(input.value.length, input.value.length)
+  autoSize()
   let mounted = true
   let saving = false
   const saveEdit = (): void => {

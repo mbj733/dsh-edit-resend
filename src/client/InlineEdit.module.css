@@ -33,27 +33,28 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: min(560px, 100%);
-  padding: 20px 24px 24px;
+  gap: 14px;
+  width: min(440px, 100%);
+  padding: 20px;
   border: 1px solid var(--dsw-alias-border-inverted);
-  border-radius: 24px;
+  border-radius: 20px;
   background: var(--dsw-alias-bg-layer-2);
   box-shadow: var(--dsw-shadow-lv3);
 }
 
 .title {
   margin: 0;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 600;
   color: var(--dsw-alias-label-primary);
 }
 
 .input {
   width: 100%;
-  min-height: 140px;
-  padding: 12px;
+  min-height: 72px;
+  max-height: 360px;
+  padding: 10px 12px;
   border: 1px solid var(--dsw-alias-border-l2);
   border-radius: 12px;
   background: var(--dsw-specific-input-major);
@@ -61,7 +62,8 @@
   font-family: inherit;
   font-size: 14px;
   line-height: 22px;
-  resize: vertical;
+  resize: none;
+  overflow-y: auto;
 }
 .input:focus {
   outline: none;
@@ -70,8 +72,22 @@
 
 .footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-caption);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
 }
 
 .save,
@@ -79,16 +95,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 18px;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 17px;
   font-size: 14px;
-  line-height: 22px;
+  line-height: 20px;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 .save {
+  min-width: 92px;
   border: none;
   background: var(--dsw-alias-button-primary-fill);
   color: var(--dsw-alias-label-primary-foreground);

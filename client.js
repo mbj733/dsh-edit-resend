@@ -399,7 +399,7 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 		//#region \0dsh-css:D:\dsh\dsh-edit-resend\src\client\InlineEdit.module.css.mjs
-		const css$2 = ".fVO5cq_iconButton{width:24px;height:24px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;padding:0;display:inline-flex}.fVO5cq_iconButton:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_overlay{z-index:1000;background:var(--dsw-alias-bg-mask-1);backdrop-filter:var(--dsw-mask-blur);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}.fVO5cq_panel{z-index:1;border:1px solid var(--dsw-alias-border-inverted);background:var(--dsw-alias-bg-layer-2);width:min(560px,100%);box-shadow:var(--dsw-shadow-lv3);border-radius:24px;flex-direction:column;gap:16px;padding:20px 24px 24px;display:flex;position:relative}.fVO5cq_title{color:var(--dsw-alias-label-primary);margin:0;font-size:16px;font-weight:500;line-height:24px}.fVO5cq_input{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-specific-input-major);width:100%;min-height:140px;color:var(--dsw-alias-label-primary);resize:vertical;border-radius:12px;padding:12px;font-family:inherit;font-size:14px;line-height:22px}.fVO5cq_input:focus{border-color:var(--dsw-alias-state-business-primary);outline:none}.fVO5cq_footer{justify-content:flex-end;gap:8px;display:flex}.fVO5cq_save,.fVO5cq_cancel{cursor:pointer;border-radius:18px;justify-content:center;align-items:center;height:36px;padding:0 14px;font-size:14px;line-height:22px;transition:background .15s;display:inline-flex}.fVO5cq_save{background:var(--dsw-alias-button-primary-fill);color:var(--dsw-alias-label-primary-foreground);border:none}.fVO5cq_save:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}.fVO5cq_save:disabled{opacity:.4;cursor:not-allowed}.fVO5cq_cancel{border:1px solid var(--dsw-alias-border-l2);color:var(--dsw-alias-label-primary);background:0 0}.fVO5cq_cancel:hover{background:var(--dsw-alias-interactive-bg-hover)}";
+		const css$2 = ".fVO5cq_iconButton{width:24px;height:24px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;padding:0;display:inline-flex}.fVO5cq_iconButton:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_overlay{z-index:1000;background:var(--dsw-alias-bg-mask-1);backdrop-filter:var(--dsw-mask-blur);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}.fVO5cq_panel{z-index:1;border:1px solid var(--dsw-alias-border-inverted);background:var(--dsw-alias-bg-layer-2);width:min(440px,100%);box-shadow:var(--dsw-shadow-lv3);border-radius:20px;flex-direction:column;gap:14px;padding:20px;display:flex;position:relative}.fVO5cq_title{color:var(--dsw-alias-label-primary);margin:0;font-size:15px;font-weight:600;line-height:22px}.fVO5cq_input{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-specific-input-major);width:100%;min-height:72px;max-height:360px;color:var(--dsw-alias-label-primary);resize:none;border-radius:12px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:22px;overflow-y:auto}.fVO5cq_input:focus{border-color:var(--dsw-alias-state-business-primary);outline:none}.fVO5cq_footer{justify-content:space-between;align-items:center;gap:12px;display:flex}.fVO5cq_hint{color:var(--dsw-alias-label-caption);font-size:12px;line-height:18px}.fVO5cq_actions{flex:none;align-items:center;gap:12px;display:flex}.fVO5cq_save,.fVO5cq_cancel{cursor:pointer;border-radius:17px;justify-content:center;align-items:center;height:34px;padding:0 16px;font-size:14px;line-height:20px;transition:background .15s;display:inline-flex}.fVO5cq_save{background:var(--dsw-alias-button-primary-fill);min-width:92px;color:var(--dsw-alias-label-primary-foreground);border:none}.fVO5cq_save:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}.fVO5cq_save:disabled{opacity:.4;cursor:not-a... (line truncated to 2000 chars)
 		const tagId$2 = "dsh-edit-resend/InlineEdit.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId$2) + "]") === null) {
 			const tag = document.createElement("style");
@@ -409,14 +409,16 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var InlineEdit_module_css_default = {
-			"panel": "fVO5cq_panel",
 			"input": "fVO5cq_input",
-			"title": "fVO5cq_title",
-			"cancel": "fVO5cq_cancel",
-			"save": "fVO5cq_save",
 			"iconButton": "fVO5cq_iconButton",
+			"overlay": "fVO5cq_overlay",
+			"actions": "fVO5cq_actions",
+			"hint": "fVO5cq_hint",
+			"title": "fVO5cq_title",
 			"footer": "fVO5cq_footer",
-			"overlay": "fVO5cq_overlay"
+			"panel": "fVO5cq_panel",
+			"cancel": "fVO5cq_cancel",
+			"save": "fVO5cq_save"
 		};
 		//#endregion
 		//#region src/client/InlineEdit.tsx
@@ -436,6 +438,8 @@ window.__ModuleLoader__.load({
 			title: InlineEdit_module_css_default["title"] ?? "",
 			input: InlineEdit_module_css_default["input"] ?? "",
 			footer: InlineEdit_module_css_default["footer"] ?? "",
+			hint: InlineEdit_module_css_default["hint"] ?? "",
+			actions: InlineEdit_module_css_default["actions"] ?? "",
 			iconButton: InlineEdit_module_css_default["iconButton"] ?? "",
 			save: InlineEdit_module_css_default["save"] ?? "",
 			cancel: InlineEdit_module_css_default["cancel"] ?? ""
@@ -470,18 +474,30 @@ window.__ModuleLoader__.load({
 			input.value = block.text;
 			const footer = document.createElement("div");
 			footer.className = STYLE.footer;
+			const hint = document.createElement("span");
+			hint.className = STYLE.hint;
+			hint.textContent = "从该消息之前分支重新生成，原版本保留";
+			const actions = document.createElement("div");
+			actions.className = STYLE.actions;
 			const save = document.createElement("button");
 			save.className = STYLE.save;
 			save.textContent = "重新发送";
 			const cancel = document.createElement("button");
 			cancel.className = STYLE.cancel;
 			cancel.textContent = "取消";
-			footer.append(save, cancel);
+			actions.append(save, cancel);
+			footer.append(hint, actions);
 			panel.append(title, input, footer);
 			overlay.appendChild(panel);
 			document.body.appendChild(overlay);
+			const autoSize = () => {
+				input.style.height = "auto";
+				input.style.height = Math.min(input.scrollHeight, 360) + "px";
+			};
+			input.addEventListener("input", autoSize);
 			input.focus();
 			input.setSelectionRange(input.value.length, input.value.length);
+			autoSize();
 			let mounted = true;
 			let saving = false;
 			const saveEdit = () => {
@@ -638,10 +654,10 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendHeader_module_css_default = {
-			"stopButton": "k-Flkq_stopButton",
-			"root": "k-Flkq_root",
 			"counter": "k-Flkq_counter",
+			"root": "k-Flkq_root",
 			"iconButton": "k-Flkq_iconButton",
+			"stopButton": "k-Flkq_stopButton",
 			"rerollButton": "k-Flkq_rerollButton"
 		};
 		//#endregion
@@ -726,56 +742,56 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendTimelineView_module_css_default = {
-			"turnTitle": "dvKrZa_turnTitle",
-			"columns": "dvKrZa_columns",
-			"versionButton": "dvKrZa_versionButton",
-			"versionMain": "dvKrZa_versionMain",
-			"pathBadge": "dvKrZa_pathBadge",
-			"headerActions": "dvKrZa_headerActions",
-			"messageHeader": "dvKrZa_messageHeader",
+			"select": "dvKrZa_select",
+			"title": "dvKrZa_title",
+			"effectDepth": "dvKrZa_effectDepth",
+			"messageList": "dvKrZa_messageList",
+			"kindBadge": "dvKrZa_kindBadge",
+			"effectButtons": "dvKrZa_effectButtons",
+			"openBadge": "dvKrZa_openBadge",
+			"versionTitle": "dvKrZa_versionTitle",
+			"versionList": "dvKrZa_versionList",
+			"editorActions": "dvKrZa_editorActions",
 			"editorHint": "dvKrZa_editorHint",
 			"primaryButton": "dvKrZa_primaryButton",
-			"messageCard": "dvKrZa_messageCard",
-			"status": "dvKrZa_status",
-			"effectButtons": "dvKrZa_effectButtons",
-			"turnHeader": "dvKrZa_turnHeader",
-			"effectDepth": "dvKrZa_effectDepth",
-			"versionTitle": "dvKrZa_versionTitle",
-			"count": "dvKrZa_count",
-			"cascadeField": "dvKrZa_cascadeField",
 			"intro": "dvKrZa_intro",
-			"versionDiff": "dvKrZa_versionDiff",
-			"versionDot": "dvKrZa_versionDot",
-			"messageList": "dvKrZa_messageList",
-			"currentBadge": "dvKrZa_currentBadge",
-			"turnsPanel": "dvKrZa_turnsPanel",
-			"effectControls": "dvKrZa_effectControls",
-			"select": "dvKrZa_select",
-			"versionLine": "dvKrZa_versionLine",
-			"turnSection": "dvKrZa_turnSection",
+			"versionsPanel": "dvKrZa_versionsPanel",
+			"versionButton": "dvKrZa_versionButton",
+			"turnTitle": "dvKrZa_turnTitle",
 			"turnPreview": "dvKrZa_turnPreview",
-			"kindBadge": "dvKrZa_kindBadge",
-			"editor": "dvKrZa_editor",
-			"error": "dvKrZa_error",
-			"versionMeta": "dvKrZa_versionMeta",
-			"pageHeader": "dvKrZa_pageHeader",
-			"versionItem": "dvKrZa_versionItem",
-			"textarea": "dvKrZa_textarea",
-			"editorActions": "dvKrZa_editorActions",
-			"root": "dvKrZa_root",
-			"turnList": "dvKrZa_turnList",
 			"secondaryButton": "dvKrZa_secondaryButton",
-			"empty": "dvKrZa_empty",
-			"messageText": "dvKrZa_messageText",
-			"versionList": "dvKrZa_versionList",
-			"subtitle": "dvKrZa_subtitle",
-			"title": "dvKrZa_title",
-			"openBadge": "dvKrZa_openBadge",
-			"sectionHeading": "dvKrZa_sectionHeading",
-			"messageTime": "dvKrZa_messageTime",
-			"textButton": "dvKrZa_textButton",
+			"editor": "dvKrZa_editor",
 			"notice": "dvKrZa_notice",
-			"versionsPanel": "dvKrZa_versionsPanel"
+			"empty": "dvKrZa_empty",
+			"versionDot": "dvKrZa_versionDot",
+			"sectionHeading": "dvKrZa_sectionHeading",
+			"root": "dvKrZa_root",
+			"versionLine": "dvKrZa_versionLine",
+			"messageText": "dvKrZa_messageText",
+			"headerActions": "dvKrZa_headerActions",
+			"turnList": "dvKrZa_turnList",
+			"turnSection": "dvKrZa_turnSection",
+			"subtitle": "dvKrZa_subtitle",
+			"columns": "dvKrZa_columns",
+			"pageHeader": "dvKrZa_pageHeader",
+			"count": "dvKrZa_count",
+			"effectControls": "dvKrZa_effectControls",
+			"versionItem": "dvKrZa_versionItem",
+			"cascadeField": "dvKrZa_cascadeField",
+			"versionMain": "dvKrZa_versionMain",
+			"versionMeta": "dvKrZa_versionMeta",
+			"currentBadge": "dvKrZa_currentBadge",
+			"versionDiff": "dvKrZa_versionDiff",
+			"messageCard": "dvKrZa_messageCard",
+			"pathBadge": "dvKrZa_pathBadge",
+			"messageHeader": "dvKrZa_messageHeader",
+			"turnHeader": "dvKrZa_turnHeader",
+			"textButton": "dvKrZa_textButton",
+			"status": "dvKrZa_status",
+			"textarea": "dvKrZa_textarea",
+			"turnsPanel": "dvKrZa_turnsPanel",
+			"error": "dvKrZa_error",
+			"messageTime": "dvKrZa_messageTime"
 		};
 		//#endregion
 		//#region src/client/EditResendTimelineView.tsx
