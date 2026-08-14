@@ -1,0 +1,47 @@
+.iconButton {
+  background: transparent;
+  border: none;
+  color: var(--dsw-muted, #999);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  display: inline-flex;
+}
+.iconButton:hover { color: var(--dsw-fg, #e0e0e0); background: var(--dsw-bg2, #1e1e1e); }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.panel {
+  width: min(560px, 90vw);
+  background: var(--dsw-bg, #151515);
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.title { font-size: 13px; font-weight: 600; }
+.input {
+  width: 100%;
+  min-height: 140px;
+  background: #0f0f0f;
+  color: var(--dsw-fg, #e0e0e0);
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  resize: vertical;
+}
+.footer { display: flex; justify-content: flex-end; gap: 8px; }
+.save { background: #2f6fed; color: #fff; border: none; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+.save:disabled { opacity: 0.5; cursor: not-allowed; }
+.cancel { background: transparent; color: var(--dsw-fg, #e0e0e0); border: 1px solid #333; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 13px; }

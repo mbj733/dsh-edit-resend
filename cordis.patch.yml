@@ -1,0 +1,4 @@
+# Single dual-face plugin row: index.mjs is the host half, client.js the browser half.
+- insert:
+    - id: edit-resend
+      name: dsh-edit-resend
