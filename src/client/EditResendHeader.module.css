@@ -79,3 +79,17 @@
   color: var(--dsw-alias-label-caption);
   white-space: nowrap;
 }
+
+.error {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dsw-alias-state-error-primary);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 360px;
+}

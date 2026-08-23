@@ -295,7 +295,15 @@ function agentOptions(events, fallback) {
 		...maxTokens === void 0 ? {} : { maxTokens }
 	};
 }
-async function withSourceAgent(ctx, sessionId, operation) {
+/** Whether the version operation targets the still-open (in-flight or aborted) tail turn. */
+function targetsOpenTail(operation, events) {
+	const { open } = foldTurns(events);
+	if (open === void 0) return false;
+	if (operation.action === "edit") return open.user?.seq === operation.eventSeq;
+	if (operation.action === "retry") return operation.turn === open.turn;
+	return false;
+}
+async function withSourceAgent(ctx, sessionId, operation, job) {
 	let handle;
 	let agent = ctx.agents.get(sessionId);
 	if (agent === void 0) {
@@ -307,7 +315,13 @@ async function withSourceAgent(ctx, sessionId, operation) {
 		agent = handle.agent;
 	}
 	try {
-		return await agent.runMaintenance(async () => operation(agent));
+		if (agent.status === "idle") return await agent.runMaintenance(async () => job(agent));
+		if (targetsOpenTail(operation, agent.session.events)) {
+			agent.cancel({ kind: "user" });
+			await agent.whenIdle();
+			return await agent.runMaintenance(async () => job(agent));
+		}
+		return await job(agent);
 	} finally {
 		await handle?.dispose();
 	}
@@ -455,7 +469,7 @@ async function inheritTitle(ctx, sourceId, childSession) {
 }
 async function runOperation(ctx, operation) {
 	const sourceId = sessionIdOf(operation.sessionId);
-	return withSourceAgent(ctx, sourceId, async (source) => {
+	return withSourceAgent(ctx, sourceId, operation, async (source) => {
 		const childId = sessionIdOf("session-" + crypto.randomUUID());
 		const inverses = [];
 		try {

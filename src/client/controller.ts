@@ -21,12 +21,18 @@ export interface EditResendState {
   timeline: EditResendTimeline | null
 }
 
+/** Outcome of one version mutation: ok, or the user-facing failure reason. */
+export interface EditResendOutcome {
+  ok: boolean
+  error?: string
+}
+
 export interface EditResendFace {
   hooks: { editResend: ObservableSnapshot<EditResendState> }
   load(): void
-  edit(message: EditableMessageBlock, text: string, cascade: CascadePolicy): Promise<boolean>
-  retry(turn: number, cascade: CascadePolicy): Promise<boolean>
-  reroll(): Promise<boolean>
+  edit(message: EditableMessageBlock, text: string, cascade: CascadePolicy): Promise<EditResendOutcome>
+  retry(turn: number, cascade: CascadePolicy): Promise<EditResendOutcome>
+  reroll(): Promise<EditResendOutcome>
   openVersion(sessionId: string): Promise<void>
   stop(): Promise<boolean>
 }
@@ -309,9 +315,11 @@ export class EditResendController {
     if (this.store.getSnapshot().status !== 'idle') void this.load()
   }
 
-  private async mutate(operation: EditResendOperation): Promise<boolean> {
+  private async mutate(operation: EditResendOperation): Promise<EditResendOutcome> {
     const current = this.store.getSnapshot()
-    if (current.pending !== null || current.status !== 'ready') return false
+    if (current.pending !== null || current.status !== 'ready') {
+      return { ok: false, error: '时间线尚未就绪，请稍候再试。' }
+    }
     this.store.update((state) => { state.pending = operation.action; state.error = null })
     try {
       const response = await fetch(EDIT_RESEND_PATH, {
@@ -322,10 +330,11 @@ export class EditResendController {
       const result = decodeOperationResult(await responseValue(response))
       this.store.update((state) => { state.pending = null })
       await this.openWhenListed(result.sessionId as SessionId)
-      return true
+      return { ok: true }
     } catch (error) {
-      this.store.update((state) => { state.pending = null; state.error = messageOf(error) })
-      return false
+      const message = messageOf(error)
+      this.store.update((state) => { state.pending = null; state.error = message })
+      return { ok: false, error: message }
     }
   }
 

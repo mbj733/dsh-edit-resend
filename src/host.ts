@@ -399,8 +399,17 @@ function agentOptions(events: readonly SessionEvent[], fallback?: AgentOptions):
   return { provider, model, ...(maxTokens === undefined ? {} : { maxTokens }) }
 }
 
+/** Whether the version operation targets the still-open (in-flight or aborted) tail turn. */
+function targetsOpenTail(operation: EditResendOperation, events: readonly SessionEvent[]): boolean {
+  const { open } = foldTurns(events)
+  if (open === undefined) return false
+  if (operation.action === 'edit') return open.user?.seq === operation.eventSeq
+  if (operation.action === 'retry') return operation.turn === open.turn
+  return false
+}
+
 async function withSourceAgent<T>(
-  ctx: Context, sessionId: SessionId, operation: (agent: Agent) => Promise<T>,
+  ctx: Context, sessionId: SessionId, operation: EditResendOperation, job: (agent: Agent) => Promise<T>,
 ): Promise<T> {
   let handle: AgentHandle | undefined
   let agent = ctx.agents.get(sessionId)
@@ -413,7 +422,22 @@ async function withSourceAgent<T>(
     agent = handle.agent
   }
   try {
-    return await agent.runMaintenance(async () => operation(agent))
+    if (agent.status === 'idle') {
+      return await agent.runMaintenance(async () => job(agent))
+    }
+    // The driver owns the agent. An open-tail target is the "stop the in-flight
+    // reply and regenerate from here" gesture: cancel and wait for quiescence
+    // before running, so an edit/retry of the just-sent message needs no prior
+    // manual stop and never races the abort convergence. A historical (closed)
+    // target never needs the live driver — the version child is rebuilt from
+    // the seeded prefix and the log below that boundary is append-only — so
+    // plan from a snapshot WITHOUT interrupting the running reply.
+    if (targetsOpenTail(operation, agent.session.events)) {
+      agent.cancel({ kind: 'user' })
+      await agent.whenIdle()
+      return await agent.runMaintenance(async () => job(agent))
+    }
+    return await job(agent)
   } finally {
     await handle?.dispose()
   }
@@ -577,7 +601,7 @@ async function inheritTitle(ctx: Context, sourceId: SessionId, childSession: Ses
 
 async function runOperation(ctx: Context, operation: EditResendOperation): Promise<EditResendOperationResult> {
   const sourceId = sessionIdOf(operation.sessionId)
-  return withSourceAgent(ctx, sourceId, async (source) => {
+  return withSourceAgent(ctx, sourceId, operation, async (source) => {
     const childId = sessionIdOf('session-' + crypto.randomUUID())
     const inverses: OperationInverse[] = []
     try {

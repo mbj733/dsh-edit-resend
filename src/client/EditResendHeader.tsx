@@ -40,6 +40,9 @@ export function EditResendHeader({
         edit={edit}
         retry={retry}
       />
+      {state.error === null ? null : (
+        <div className={styles['error']} role="alert">{state.error}</div>
+      )}
       <div className={styles['root']}>
         {running
           ? (

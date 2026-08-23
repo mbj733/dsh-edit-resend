@@ -140,3 +140,13 @@
 .cancel:hover {
   background: var(--dsw-alias-interactive-bg-hover);
 }
+
+.error {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--dsw-alias-interactive-bg-hover-danger);
+  color: var(--dsw-alias-state-error-primary);
+  font-size: 12px;
+  line-height: 18px;
+}

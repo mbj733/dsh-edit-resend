@@ -277,7 +277,10 @@ window.__ModuleLoader__.load({
 			}
 			async mutate(operation) {
 				const current = this.store.getSnapshot();
-				if (current.pending !== null || current.status !== "ready") return false;
+				if (current.pending !== null || current.status !== "ready") return {
+					ok: false,
+					error: "时间线尚未就绪，请稍候再试。"
+				};
 				this.store.update((state) => {
 					state.pending = operation.action;
 					state.error = null;
@@ -295,13 +298,17 @@ window.__ModuleLoader__.load({
 						state.pending = null;
 					});
 					await this.openWhenListed(result.sessionId);
-					return true;
+					return { ok: true };
 				} catch (error) {
+					const message = messageOf(error);
 					this.store.update((state) => {
 						state.pending = null;
-						state.error = messageOf(error);
+						state.error = message;
 					});
-					return false;
+					return {
+						ok: false,
+						error: message
+					};
 				}
 			}
 			/** Cancel the in-flight reply via the session face (preserving the pending queue). */
@@ -399,7 +406,7 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 		//#region \0dsh-css:D:\dsh\dsh-edit-resend\src\client\InlineEdit.module.css.mjs
-		const css$2 = ".fVO5cq_overlay,.fVO5cq_panel,.fVO5cq_title,.fVO5cq_input,.fVO5cq_footer,.fVO5cq_hint,.fVO5cq_actions,.fVO5cq_save,.fVO5cq_cancel,.fVO5cq_iconButton{box-sizing:border-box}.fVO5cq_iconButton{width:24px;height:24px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;padding:0;display:inline-flex}.fVO5cq_iconButton:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_overlay{z-index:1000;background:var(--dsw-alias-bg-mask-1);backdrop-filter:var(--dsw-mask-blur);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}.fVO5cq_panel{z-index:1;border:1px solid var(--dsw-alias-border-inverted);background:var(--dsw-alias-bg-layer-2);width:min(440px,100%);box-shadow:var(--dsw-shadow-lv3);border-radius:20px;flex-direction:column;gap:14px;padding:20px;display:flex;position:relative}.fVO5cq_title{color:var(--dsw-alias-label-primary);margin:0;font-size:15px;font-weight:600;line-height:22px}.fVO5cq_input{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-specific-input-major);width:100%;min-height:72px;max-height:360px;color:var(--dsw-alias-label-primary);resize:none;border-radius:12px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:22px;overflow-y:auto}.fVO5cq_input:focus{border-color:var(--dsw-alias-state-business-primary);outline:none}.fVO5cq_footer{justify-content:space-between;align-items:center;gap:12px;display:flex}.fVO5cq_hint{color:var(--dsw-alias-label-caption);font-size:12px;line-height:18px}.fVO5cq_actions{flex:none;align-items:center;gap:12px;display:flex}.fVO5cq_save,.fVO5cq_cancel{cursor:pointer;border-radius:17px;justify-content:center;align-items:center;height:34px;padding:0 16px;font-size:14px;line-height:20px;transition:background .15s;display:inline-flex}.fVO5cq_save{background:var(--dsw-alias-button-primary-fill);min-width:92px;color:var(--dsw-a... (line truncated to 2000 chars)
+		const css$2 = ".fVO5cq_overlay,.fVO5cq_panel,.fVO5cq_title,.fVO5cq_input,.fVO5cq_footer,.fVO5cq_hint,.fVO5cq_actions,.fVO5cq_save,.fVO5cq_cancel,.fVO5cq_iconButton{box-sizing:border-box}.fVO5cq_iconButton{width:24px;height:24px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;padding:0;display:inline-flex}.fVO5cq_iconButton:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_overlay{z-index:1000;background:var(--dsw-alias-bg-mask-1);backdrop-filter:var(--dsw-mask-blur);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}.fVO5cq_panel{z-index:1;border:1px solid var(--dsw-alias-border-inverted);background:var(--dsw-alias-bg-layer-2);width:min(440px,100%);box-shadow:var(--dsw-shadow-lv3);border-radius:20px;flex-direction:column;gap:14px;padding:20px;display:flex;position:relative}.fVO5cq_title{color:var(--dsw-alias-label-primary);margin:0;font-size:15px;font-weight:600;line-height:22px}.fVO5cq_input{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-specific-input-major);width:100%;min-height:72px;max-height:360px;color:var(--dsw-alias-label-primary);resize:none;border-radius:12px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:22px;overflow-y:auto}.fVO5cq_input:focus{border-color:var(--dsw-alias-state-business-primary);outline:none}.fVO5cq_footer{justify-content:space-between;align-items:center;gap:12px;display:flex}.fVO5cq_hint{color:var(--dsw-alias-label-caption);font-size:12px;line-height:18px}.fVO5cq_actions{flex:none;align-items:center;gap:12px;display:flex}.fVO5cq_save,.fVO5cq_cancel{cursor:pointer;border-radius:17px;justify-content:center;align-items:center;height:34px;padding:0 16px;font-size:14px;line-height:20px;transition:background .15s;display:inline-flex}.fVO5cq_save{background:var(--dsw-alias-button-primary-fill);min-width:92px;color:var(--dsw-alias-label-primary-foreground);border:none}.fVO5cq_save:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}.fVO5cq_save:disabled{opacity:.4;cursor:not-allowed}.fVO5cq_cancel{border:1px solid var(--dsw-alias-border-l2);color:var(--dsw-alias-label-primary);background:0 0}.fVO5cq_cancel:hover{background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_error{background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);border-radius:8px;margin:0;padding:8px 10px;font-size:12px;line-height:18px}";
 		const tagId$2 = "dsh-edit-resend/InlineEdit.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId$2) + "]") === null) {
 			const tag = document.createElement("style");
@@ -409,16 +416,17 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var InlineEdit_module_css_default = {
-			"actions": "fVO5cq_actions",
-			"hint": "fVO5cq_hint",
+			"error": "fVO5cq_error",
 			"overlay": "fVO5cq_overlay",
+			"hint": "fVO5cq_hint",
+			"save": "fVO5cq_save",
+			"iconButton": "fVO5cq_iconButton",
 			"panel": "fVO5cq_panel",
+			"title": "fVO5cq_title",
 			"input": "fVO5cq_input",
 			"footer": "fVO5cq_footer",
-			"save": "fVO5cq_save",
-			"cancel": "fVO5cq_cancel",
-			"iconButton": "fVO5cq_iconButton",
-			"title": "fVO5cq_title"
+			"actions": "fVO5cq_actions",
+			"cancel": "fVO5cq_cancel"
 		};
 		//#endregion
 		//#region src/client/InlineEdit.tsx
@@ -442,7 +450,8 @@ window.__ModuleLoader__.load({
 			actions: InlineEdit_module_css_default["actions"] ?? "",
 			iconButton: InlineEdit_module_css_default["iconButton"] ?? "",
 			save: InlineEdit_module_css_default["save"] ?? "",
-			cancel: InlineEdit_module_css_default["cancel"] ?? ""
+			cancel: InlineEdit_module_css_default["cancel"] ?? "",
+			error: InlineEdit_module_css_default["error"] ?? ""
 		};
 		const EDIT_PATH = "M9.94076 1.34942C10.7047 0.90231 11.6503 0.902415 12.4143 1.34942C12.7061 1.52015 12.9688 1.79118 13.3104 2.13284C13.6521 2.47448 13.9231 2.73721 14.0939 3.02894C14.5408 3.79294 14.5409 4.73856 14.0939 5.50251C13.9231 5.79415 13.652 6.05704 13.3104 6.39861L6.65932 13.0497C6.28068 13.4284 6.00695 13.7108 5.66543 13.9097C5.32391 14.1085 4.94315 14.2074 4.42705 14.3498L3.24394 14.6761C2.77527 14.8054 2.34538 14.9262 2.00131 14.9684C1.65196 15.0112 1.17964 15.0013 0.810764 14.6325C0.441921 14.2637 0.432107 13.7913 0.47486 13.442C0.517035 13.0979 0.6379 12.668 0.767181 12.1993L1.09352 11.0162C1.23588 10.5001 1.33481 10.1193 1.5336 9.77784C1.7325 9.43632 2.0149 9.1626 2.39355 8.78395L9.04466 2.13284C9.38625 1.79126 9.64911 1.52016 9.94076 1.34942ZM15.5427 14.8398H7.55223L8.96707 13.425H15.5427V14.8398ZM3.39382 9.78422C2.965 10.213 2.84244 10.3436 2.75709 10.49C2.67183 10.6366 2.61862 10.8079 2.45733 11.3925L2.13099 12.5756C2.00183 13.0439 1.92194 13.3419 1.88863 13.5536C2.10041 13.5204 2.39872 13.4416 2.86764 13.3123L4.05075 12.9859C4.63544 12.8246 4.80669 12.7715 4.95323 12.6862C5.09968 12.6008 5.23022 12.4783 5.65905 12.0494L10.721 6.98644L8.45577 4.72121L3.39382 9.78422ZM11.7 2.57079C11.3774 2.38198 10.9777 2.38198 10.6551 2.57079C10.5602 2.62647 10.4487 2.72931 10.0449 3.13311L9.45604 3.72094L11.7213 5.98617L12.3102 5.39833C12.7139 4.99457 12.8168 4.88307 12.8725 4.78818C13.0613 4.46561 13.0612 4.06585 12.8725 3.74326C12.8169 3.64827 12.7146 3.53752 12.3102 3.13311C11.9057 2.72863 11.795 2.6264 11.7 2.57079Z";
 		const REFRESH_PATH = "M7.92136 0.349152C10.3744 0.349234 12.5564 1.5052 13.9557 3.29894L15.1281 2.12759C15.3303 1.92546 15.6767 2.06943 15.6767 2.35538V5.53923C15.6766 5.71626 15.5329 5.85976 15.3559 5.86002H12.171C11.8854 5.8597 11.7426 5.51465 11.9443 5.31249L12.9641 4.29056C11.8237 2.74305 9.98908 1.74106 7.92136 1.74097C4.46436 1.74097 1.66233 4.543 1.66233 8C1.66233 11.457 4.46436 14.259 7.92136 14.259C11.3782 14.2589 14.1804 11.4569 14.1804 8H15.5722C15.5722 12.2251 12.1465 15.6507 7.92136 15.6508C3.69614 15.6508 0.270508 12.2252 0.270508 8C0.270508 3.77478 3.69614 0.349152 7.92136 0.349152Z";
@@ -477,6 +486,9 @@ window.__ModuleLoader__.load({
 			const hint = document.createElement("span");
 			hint.className = STYLE.hint;
 			hint.textContent = "从这条消息重新生成，旧版本自动归档";
+			const errorEl = document.createElement("p");
+			errorEl.className = STYLE.error;
+			errorEl.hidden = true;
 			const actions = document.createElement("div");
 			actions.className = STYLE.actions;
 			const save = document.createElement("button");
@@ -487,7 +499,7 @@ window.__ModuleLoader__.load({
 			cancel.textContent = "取消";
 			actions.append(save, cancel);
 			footer.append(hint, actions);
-			panel.append(title, input, footer);
+			panel.append(title, input, errorEl, footer);
 			overlay.appendChild(panel);
 			document.body.appendChild(overlay);
 			const autoSize = () => {
@@ -504,14 +516,18 @@ window.__ModuleLoader__.load({
 				if (saving) return;
 				saving = true;
 				save.disabled = true;
-				edit(block, input.value, "truncate").then((applied) => {
+				errorEl.hidden = true;
+				errorEl.textContent = "";
+				edit(block, input.value, "truncate").then((outcome) => {
 					if (!mounted) return;
-					if (applied) {
+					if (outcome.ok) {
 						close();
 						return;
 					}
 					saving = false;
 					save.disabled = false;
+					errorEl.hidden = false;
+					errorEl.textContent = outcome.error ?? "发送失败，请重试。";
 				});
 			};
 			const cancelEdit = () => {
@@ -644,7 +660,7 @@ window.__ModuleLoader__.load({
 		}
 		//#endregion
 		//#region \0dsh-css:D:\dsh\dsh-edit-resend\src\client\EditResendHeader.module.css.mjs
-		const css$1 = ".k-Flkq_root,.k-Flkq_iconButton,.k-Flkq_rerollButton,.k-Flkq_stopButton,.k-Flkq_counter{box-sizing:border-box}.k-Flkq_root{align-items:center;gap:6px;display:inline-flex}.k-Flkq_iconButton{width:28px;height:28px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:8px;justify-content:center;align-items:center;font-size:14px;display:inline-flex}.k-Flkq_iconButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.k-Flkq_iconButton:disabled{opacity:.4;cursor:not-allowed}.k-Flkq_rerollButton,.k-Flkq_stopButton{cursor:pointer;border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 10px;font-size:12px;line-height:18px;transition:background .15s;display:inline-flex}.k-Flkq_rerollButton{border:1px solid var(--dsw-alias-border-l2);color:var(--dsw-alias-label-primary);background:0 0}.k-Flkq_rerollButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}.k-Flkq_stopButton{border:1px solid var(--dsw-alias-state-error-primary);background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);font-weight:500}.k-Flkq_stopButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover-danger)}.k-Flkq_rerollButton:disabled,.k-Flkq_stopButton:disabled{opacity:.4;cursor:not-allowed}.k-Flkq_counter{color:var(--dsw-alias-label-caption);white-space:nowrap;font-size:11px;line-height:16px}";
+		const css$1 = ".k-Flkq_root,.k-Flkq_iconButton,.k-Flkq_rerollButton,.k-Flkq_stopButton,.k-Flkq_counter{box-sizing:border-box}.k-Flkq_root{align-items:center;gap:6px;display:inline-flex}.k-Flkq_iconButton{width:28px;height:28px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:8px;justify-content:center;align-items:center;font-size:14px;display:inline-flex}.k-Flkq_iconButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-primary)}.k-Flkq_iconButton:disabled{opacity:.4;cursor:not-allowed}.k-Flkq_rerollButton,.k-Flkq_stopButton{cursor:pointer;border-radius:14px;justify-content:center;align-items:center;height:28px;padding:0 10px;font-size:12px;line-height:18px;transition:background .15s;display:inline-flex}.k-Flkq_rerollButton{border:1px solid var(--dsw-alias-border-l2);color:var(--dsw-alias-label-primary);background:0 0}.k-Flkq_rerollButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover)}.k-Flkq_stopButton{border:1px solid var(--dsw-alias-state-error-primary);background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);font-weight:500}.k-Flkq_stopButton:hover:not(:disabled){background:var(--dsw-alias-interactive-bg-hover-danger)}.k-Flkq_rerollButton:disabled,.k-Flkq_stopButton:disabled{opacity:.4;cursor:not-allowed}.k-Flkq_counter{color:var(--dsw-alias-label-caption);white-space:nowrap;font-size:11px;line-height:16px}.k-Flkq_error{background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);white-space:nowrap;text-overflow:ellipsis;border-radius:8px;max-width:360px;padding:4px 10px;font-size:12px;line-height:18px;display:inline-block;overflow:hidden}";
 		const tagId$1 = "dsh-edit-resend/EditResendHeader.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId$1) + "]") === null) {
 			const tag = document.createElement("style");
@@ -654,11 +670,12 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendHeader_module_css_default = {
-			"root": "k-Flkq_root",
-			"iconButton": "k-Flkq_iconButton",
 			"stopButton": "k-Flkq_stopButton",
-			"rerollButton": "k-Flkq_rerollButton",
-			"counter": "k-Flkq_counter"
+			"counter": "k-Flkq_counter",
+			"iconButton": "k-Flkq_iconButton",
+			"root": "k-Flkq_root",
+			"error": "k-Flkq_error",
+			"rerollButton": "k-Flkq_rerollButton"
 		};
 		//#endregion
 		//#region src/client/EditResendHeader.tsx
@@ -676,63 +693,71 @@ window.__ModuleLoader__.load({
 			const effectDepth = timeline?.undoStack.length ?? 0;
 			const versionCount = timeline?.versions.length ?? 0;
 			const busy = state.pending !== null || state.status !== "ready";
-			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(InlineEdit, {
-				messages: syncMessages,
-				edit,
-				retry
-			}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: EditResendHeader_module_css_default["root"],
-				children: [
-					running ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: EditResendHeader_module_css_default["stopButton"],
-						title: "停止当前回复，之后可直接编辑并重新发送",
-						onClick: () => {
-							stop();
-						},
-						children: "■ 停止"
-					}) : null,
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: EditResendHeader_module_css_default["iconButton"],
-						"aria-label": "撤销当前版本效果",
-						title: "撤销当前效果",
-						disabled: undoSessionId === void 0 || busy,
-						onClick: () => {
-							if (undoSessionId !== void 0) openVersion(undoSessionId);
-						},
-						children: "←"
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						className: EditResendHeader_module_css_default["counter"],
-						children: versionCount === 0 ? "编辑 —" : "编辑 " + String(effectDepth) + " 层 · " + String(versionCount) + " 版"
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: EditResendHeader_module_css_default["iconButton"],
-						"aria-label": "重施加下一版本效果",
-						title: "重施加下一效果",
-						disabled: redoSessionId === void 0 || busy,
-						onClick: () => {
-							if (redoSessionId !== void 0) openVersion(redoSessionId);
-						},
-						children: "→"
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: EditResendHeader_module_css_default["rerollButton"],
-						disabled: busy || timeline === null,
-						onClick: () => {
-							reroll();
-						},
-						children: state.pending === "reroll" ? "重生成中…" : "重生成"
-					})
-				]
-			})] });
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(InlineEdit, {
+					messages: syncMessages,
+					edit,
+					retry
+				}),
+				state.error === null ? null : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+					className: EditResendHeader_module_css_default["error"],
+					role: "alert",
+					children: state.error
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: EditResendHeader_module_css_default["root"],
+					children: [
+						running ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: EditResendHeader_module_css_default["stopButton"],
+							title: "停止当前回复，之后可直接编辑并重新发送",
+							onClick: () => {
+								stop();
+							},
+							children: "■ 停止"
+						}) : null,
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: EditResendHeader_module_css_default["iconButton"],
+							"aria-label": "撤销当前版本效果",
+							title: "撤销当前效果",
+							disabled: undoSessionId === void 0 || busy,
+							onClick: () => {
+								if (undoSessionId !== void 0) openVersion(undoSessionId);
+							},
+							children: "←"
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+							className: EditResendHeader_module_css_default["counter"],
+							children: versionCount === 0 ? "编辑 —" : "编辑 " + String(effectDepth) + " 层 · " + String(versionCount) + " 版"
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: EditResendHeader_module_css_default["iconButton"],
+							"aria-label": "重施加下一版本效果",
+							title: "重施加下一效果",
+							disabled: redoSessionId === void 0 || busy,
+							onClick: () => {
+								if (redoSessionId !== void 0) openVersion(redoSessionId);
+							},
+							children: "→"
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: EditResendHeader_module_css_default["rerollButton"],
+							disabled: busy || timeline === null,
+							onClick: () => {
+								reroll();
+							},
+							children: state.pending === "reroll" ? "重生成中…" : "重生成"
+						})
+					]
+				})
+			] });
 		}
 		//#endregion
 		//#region \0dsh-css:D:\dsh\dsh-edit-resend\src\client\EditResendTimelineView.module.css.mjs
-		const css = ".dvKrZa_root,.dvKrZa_select,.dvKrZa_versionsPanel,.dvKrZa_turnsPanel,.dvKrZa_versionButton,.dvKrZa_messageCard,.dvKrZa_textarea,.dvKrZa_primaryButton,.dvKrZa_secondaryButton{box-sizing:border-box}.dvKrZa_root{color:var(--dsw-alias-label-primary);flex-direction:column;gap:16px;padding:16px;font-size:13px;display:flex}.dvKrZa_pageHeader{justify-content:space-between;align-items:flex-start;gap:16px;display:flex}.dvKrZa_title{margin:0 0 4px;font-size:16px;font-weight:500;line-height:24px}.dvKrZa_intro{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.dvKrZa_headerActions{align-items:center;gap:10px;display:flex}.dvKrZa_cascadeField{color:var(--dsw-alias-label-caption);flex-direction:column;gap:2px;font-size:11px;display:flex}.dvKrZa_select{background:var(--dsw-specific-selector);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);border-radius:8px;padding:4px 8px}.dvKrZa_columns{grid-template-columns:260px 1fr;align-items:start;gap:16px;display:grid}.dvKrZa_versionsPanel,.dvKrZa_turnsPanel{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:12px;padding:10px}.dvKrZa_sectionHeading{align-items:baseline;gap:8px;margin-bottom:8px;display:flex}.dvKrZa_subtitle{margin:0;font-size:14px;font-weight:500;line-height:22px}.dvKrZa_count{color:var(--dsw-alias-label-caption);font-size:12px}.dvKrZa_effectControls{flex-direction:column;gap:6px;margin-bottom:10px;display:flex}.dvKrZa_effectDepth{color:var(--dsw-alias-label-caption);font-size:11px}.dvKrZa_effectButtons{flex-wrap:wrap;gap:6px;display:flex}.dvKrZa_versionList{flex-direction:column;gap:2px;margin:0;padding:0;list-style:none;display:flex}.dvKrZa_versionItem{--edit-resend-depth:0;padding-left:calc(var(--edit-resend-depth) * 12px)}.dvKrZa_versionButton{text-align:left;width:100%;color:var(--dsw-alias-label-primary);cursor:pointer;background:0 0;border:none;border-radius:8px;align-items:center;gap:6px;padding:4... (line truncated to 2000 chars)
+		const css = ".dvKrZa_root,.dvKrZa_select,.dvKrZa_versionsPanel,.dvKrZa_turnsPanel,.dvKrZa_versionButton,.dvKrZa_messageCard,.dvKrZa_textarea,.dvKrZa_primaryButton,.dvKrZa_secondaryButton{box-sizing:border-box}.dvKrZa_root{color:var(--dsw-alias-label-primary);flex-direction:column;gap:16px;padding:16px;font-size:13px;display:flex}.dvKrZa_pageHeader{justify-content:space-between;align-items:flex-start;gap:16px;display:flex}.dvKrZa_title{margin:0 0 4px;font-size:16px;font-weight:500;line-height:24px}.dvKrZa_intro{color:var(--dsw-alias-label-caption);margin:0;font-size:12px;line-height:18px}.dvKrZa_headerActions{align-items:center;gap:10px;display:flex}.dvKrZa_cascadeField{color:var(--dsw-alias-label-caption);flex-direction:column;gap:2px;font-size:11px;display:flex}.dvKrZa_select{background:var(--dsw-specific-selector);color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);border-radius:8px;padding:4px 8px}.dvKrZa_columns{grid-template-columns:260px 1fr;align-items:start;gap:16px;display:grid}.dvKrZa_versionsPanel,.dvKrZa_turnsPanel{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);border-radius:12px;padding:10px}.dvKrZa_sectionHeading{align-items:baseline;gap:8px;margin-bottom:8px;display:flex}.dvKrZa_subtitle{margin:0;font-size:14px;font-weight:500;line-height:22px}.dvKrZa_count{color:var(--dsw-alias-label-caption);font-size:12px}.dvKrZa_effectControls{flex-direction:column;gap:6px;margin-bottom:10px;display:flex}.dvKrZa_effectDepth{color:var(--dsw-alias-label-caption);font-size:11px}.dvKrZa_effectButtons{flex-wrap:wrap;gap:6px;display:flex}.dvKrZa_versionList{flex-direction:column;gap:2px;margin:0;padding:0;list-style:none;display:flex}.dvKrZa_versionItem{--edit-resend-depth:0;padding-left:calc(var(--edit-resend-depth) * 12px)}.dvKrZa_versionButton{text-align:left;width:100%;color:var(--dsw-alias-label-primary);cursor:pointer;background:0 0;border:none;border-radius:8px;align-items:center;gap:6px;padding:4px 6px;display:flex}.dvKrZa_versionButton:hover,.dvKrZa_versionButton[data-current=true]{background:var(--dsw-alias-interactive-bg-hover)}.dvKrZa_versionLine{background:var(--dsw-alias-border-l2);align-self:stretch;width:2px}.dvKrZa_versionDot{background:var(--dsw-alias-label-tertiary);border-radius:50%;flex:none;width:8px;height:8px}.dvKrZa_versionMain{flex-direction:column;gap:2px;min-width:0;display:flex}.dvKrZa_versionTitle{font-size:12px}.dvKrZa_versionMeta{color:var(--dsw-alias-label-caption);font-size:10px}.dvKrZa_versionDiff{color:var(--dsw-alias-label-secondary);text-overflow:ellipsis;flex-direction:column;gap:1px;font-size:10px;display:flex;overflow:hidden}.dvKrZa_currentBadge{color:var(--dsw-alias-state-business-primary);flex:none;margin-left:auto;font-size:10px}.dvKrZa_pathBadge{color:var(--dsw-alias-label-tertiary);flex:none;margin-left:auto;font-size:10px}.dvKrZa_turnList{flex-direction:column;gap:10px;margin:0;padding:0;list-style:none;display:flex}.dvKrZa_turnSection{border-top:1px solid var(--dsw-alias-border-l1);padding-top:8px}.dvKrZa_turnHeader{justify-content:space-between;align-items:flex-start;gap:10px;display:flex}.dvKrZa_turnTitle{margin:0;font-size:13px;font-weight:500;line-height:20px}.dvKrZa_turnPreview{color:var(--dsw-alias-label-caption);margin:2px 0 0;font-size:11px}.dvKrZa_messageList{flex-direction:column;gap:6px;margin-top:6px;display:flex}.dvKrZa_messageCard{border:1px solid var(--dsw-alias-border-l1);border-radius:8px;padding:6px 8px}.dvKrZa_messageHeader{align-items:center;gap:6px;display:flex}.dvKrZa_kindBadge{background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-secondary);border-radius:10px;padding:1px 6px;font-size:10px}.dvKrZa_openBadge{background:var(--dsw-alias-state-business-tertiary);color:var(--dsw-alias-state-business-primary);border-radius:10px;padding:1px 6px;font-size:10px}.dvKrZa_messageTime{color:var(--dsw-alias-label-caption);margin-left:auto;font-size:10px}.dvKrZa_messageText{white-space:pre-wrap;color:var(--dsw-alias-label-primary);margin:6px 0 0;font-family:inherit;font-size:12px}.dvKrZa_textButton{color:var(--dsw-alias-state-business-primary);cursor:pointer;background:0 0;border:none;padding:0;font-size:12px}.dvKrZa_editor{flex-direction:column;gap:6px;margin-top:6px;display:flex}.dvKrZa_textarea{background:var(--dsw-specific-input-major);width:100%;color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);resize:vertical;border-radius:8px;padding:8px;font-family:inherit;font-size:12px}.dvKrZa_editorActions{justify-content:space-between;align-items:center;gap:8px;display:flex}.dvKrZa_editorHint{color:var(--dsw-alias-label-caption);font-size:11px}.dvKrZa_primaryButton{background:var(--dsw-alias-button-primary-fill);color:var(--dsw-alias-label-primary-foreground);cursor:pointer;border:none;border-radius:14px;padding:5px 12px;font-size:12px;line-height:18px}.dvKrZa_primaryButton:disabled{opacity:.4;cursor:not-allowed}.dvKrZa_secondaryButton{color:var(--dsw-alias-label-primary);border:1px solid var(--dsw-alias-border-l2);cursor:pointer;background:0 0;border-radius:14px;padding:4px 10px;font-size:12px;line-height:18px}.dvKrZa_secondaryButton:disabled{opacity:.4;cursor:not-allowed}.dvKrZa_status{color:var(--dsw-alias-label-caption);padding:24px;font-size:13px}.dvKrZa_error{color:var(--dsw-alias-state-error-primary);font-size:12px}.dvKrZa_notice,.dvKrZa_empty{color:var(--dsw-alias-label-caption);font-size:12px}";
 		const tagId = "dsh-edit-resend/EditResendTimelineView.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
 			const tag = document.createElement("style");
@@ -742,56 +767,56 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendTimelineView_module_css_default = {
-			"versionTitle": "dvKrZa_versionTitle",
+			"messageList": "dvKrZa_messageList",
+			"pageHeader": "dvKrZa_pageHeader",
+			"messageHeader": "dvKrZa_messageHeader",
+			"currentBadge": "dvKrZa_currentBadge",
+			"sectionHeading": "dvKrZa_sectionHeading",
 			"effectButtons": "dvKrZa_effectButtons",
-			"effectDepth": "dvKrZa_effectDepth",
-			"turnList": "dvKrZa_turnList",
+			"turnsPanel": "dvKrZa_turnsPanel",
+			"effectControls": "dvKrZa_effectControls",
+			"openBadge": "dvKrZa_openBadge",
+			"textButton": "dvKrZa_textButton",
 			"primaryButton": "dvKrZa_primaryButton",
+			"status": "dvKrZa_status",
+			"error": "dvKrZa_error",
+			"turnTitle": "dvKrZa_turnTitle",
+			"empty": "dvKrZa_empty",
+			"versionButton": "dvKrZa_versionButton",
+			"versionDiff": "dvKrZa_versionDiff",
+			"versionDot": "dvKrZa_versionDot",
+			"editorActions": "dvKrZa_editorActions",
+			"title": "dvKrZa_title",
+			"pathBadge": "dvKrZa_pathBadge",
+			"editorHint": "dvKrZa_editorHint",
+			"notice": "dvKrZa_notice",
+			"versionMain": "dvKrZa_versionMain",
+			"turnList": "dvKrZa_turnList",
+			"headerActions": "dvKrZa_headerActions",
+			"versionList": "dvKrZa_versionList",
+			"turnSection": "dvKrZa_turnSection",
 			"kindBadge": "dvKrZa_kindBadge",
+			"subtitle": "dvKrZa_subtitle",
+			"versionItem": "dvKrZa_versionItem",
+			"count": "dvKrZa_count",
+			"versionLine": "dvKrZa_versionLine",
 			"select": "dvKrZa_select",
+			"messageCard": "dvKrZa_messageCard",
+			"textarea": "dvKrZa_textarea",
+			"turnPreview": "dvKrZa_turnPreview",
+			"versionsPanel": "dvKrZa_versionsPanel",
 			"messageTime": "dvKrZa_messageTime",
 			"messageText": "dvKrZa_messageText",
-			"pageHeader": "dvKrZa_pageHeader",
-			"versionList": "dvKrZa_versionList",
-			"editor": "dvKrZa_editor",
-			"editorActions": "dvKrZa_editorActions",
-			"editorHint": "dvKrZa_editorHint",
-			"turnSection": "dvKrZa_turnSection",
-			"status": "dvKrZa_status",
-			"versionsPanel": "dvKrZa_versionsPanel",
-			"columns": "dvKrZa_columns",
-			"subtitle": "dvKrZa_subtitle",
-			"versionDiff": "dvKrZa_versionDiff",
-			"pathBadge": "dvKrZa_pathBadge",
-			"turnPreview": "dvKrZa_turnPreview",
-			"turnHeader": "dvKrZa_turnHeader",
-			"error": "dvKrZa_error",
-			"effectControls": "dvKrZa_effectControls",
-			"currentBadge": "dvKrZa_currentBadge",
-			"messageCard": "dvKrZa_messageCard",
-			"versionMeta": "dvKrZa_versionMeta",
-			"headerActions": "dvKrZa_headerActions",
-			"turnsPanel": "dvKrZa_turnsPanel",
-			"count": "dvKrZa_count",
-			"messageHeader": "dvKrZa_messageHeader",
-			"versionButton": "dvKrZa_versionButton",
-			"versionItem": "dvKrZa_versionItem",
-			"cascadeField": "dvKrZa_cascadeField",
-			"openBadge": "dvKrZa_openBadge",
-			"empty": "dvKrZa_empty",
 			"secondaryButton": "dvKrZa_secondaryButton",
-			"textButton": "dvKrZa_textButton",
-			"turnTitle": "dvKrZa_turnTitle",
-			"title": "dvKrZa_title",
-			"root": "dvKrZa_root",
+			"editor": "dvKrZa_editor",
+			"versionMeta": "dvKrZa_versionMeta",
+			"cascadeField": "dvKrZa_cascadeField",
+			"effectDepth": "dvKrZa_effectDepth",
+			"versionTitle": "dvKrZa_versionTitle",
 			"intro": "dvKrZa_intro",
-			"messageList": "dvKrZa_messageList",
-			"versionLine": "dvKrZa_versionLine",
-			"versionMain": "dvKrZa_versionMain",
-			"notice": "dvKrZa_notice",
-			"versionDot": "dvKrZa_versionDot",
-			"textarea": "dvKrZa_textarea",
-			"sectionHeading": "dvKrZa_sectionHeading"
+			"turnHeader": "dvKrZa_turnHeader",
+			"columns": "dvKrZa_columns",
+			"root": "dvKrZa_root"
 		};
 		//#endregion
 		//#region src/client/EditResendTimelineView.tsx
