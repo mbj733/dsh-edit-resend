@@ -22,21 +22,23 @@ export const INLINE_SAFE = /^@deepseek-ai\/dsh-(host-apiproxy|session|llm|tools|
 const VENDORED_LIBRARY = /^@deepseek-ai\/(cosmokit|schemastery)(\/|$)/
 const GENERATED_REMOTE = /^@deepseek-ai\/dsh-[a-z0-9]+(?:-[a-z0-9]+)*\/remote$/
 
+// Synced with deepseek-harness packages/client/web/src/platform.ts (0.1.2-alpha.3).
+// alpha.3 removed @deepseek-ai/dsh-client-runtime entirely: createSnapshotStore and
+// the snapshot types now live in @deepseek-ai/dsh-client-store (a baseline row), and
+// dsh-client-web-react / dsh-client-ui-attachment / dsh-client-schema-form left the
+// platform list.
 export const PLATFORM_MODULES: readonly string[] = [
   'react',
   'react/jsx-runtime',
   'react-dom',
   'react-dom/client',
   '@deepseek-ai/cordis',
+  '@deepseek-ai/dsh-client-store',
   '@deepseek-ai/dsh-client-ui-slots',
-  '@deepseek-ai/dsh-client-web-react',
   '@deepseek-ai/dsh-client-ui-primitives',
-  '@deepseek-ai/dsh-client-ui-attachment',
-  '@deepseek-ai/dsh-client-schema-form',
 ]
 
-const RUNTIME_STORE_EXEMPTION = '@deepseek-ai/dsh-client-runtime/client'
-export const CLIENT_EXTERNALS: readonly string[] = [...PLATFORM_MODULES, RUNTIME_STORE_EXEMPTION]
+export const CLIENT_EXTERNALS: readonly string[] = [...PLATFORM_MODULES]
 
 function sourceAssetPath(source: string, importer: string): string {
   const emitted = resolvePath(dirname(importer), source)

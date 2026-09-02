@@ -4,7 +4,7 @@ window.__ModuleLoader__.load({
 		var module = { exports: {} };
 		var exports = module.exports;
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-		let _deepseek_ai_dsh_client_runtime_client = require("@deepseek-ai/dsh-client-runtime/client");
+		let _deepseek_ai_dsh_client_store = require("@deepseek-ai/dsh-client-store");
 		let react = require("react");
 		let react_jsx_runtime = require("react/jsx-runtime");
 		//#region src/shared.ts
@@ -123,9 +123,7 @@ window.__ModuleLoader__.load({
 		* NOT change the host-side full-log result, so it must not trigger a refetch.
 		*/
 		function conversationRevision(snapshot) {
-			let maxTurn = 0;
-			for (const turn of snapshot.turnEnds.keys()) if (turn > maxTurn) maxTurn = turn;
-			return (snapshot.running ? "R" : "r") + ":" + String(maxTurn);
+			return (snapshot.running ? "R" : "r") + ":" + String(snapshot.queue.length);
 		}
 		function lineageRevision(snapshot, sessionId) {
 			let root = sessionId;
@@ -154,7 +152,7 @@ window.__ModuleLoader__.load({
 		}
 		var EditResendController = class {
 			sessionId;
-			store = (0, _deepseek_ai_dsh_client_runtime_client.createSnapshotStore)({
+			store = (0, _deepseek_ai_dsh_client_store.createSnapshotStore)({
 				status: "idle",
 				error: null,
 				pending: null,
@@ -350,61 +348,6 @@ window.__ModuleLoader__.load({
 			}
 		};
 		//#endregion
-		//#region src/client/messages.ts
-		/**
-		* Synchronously derive editable message blocks from the conversation snapshot's
-		* finalized nodes. This is the zero-latency source for the inline edit/retry
-		* icons: it needs no host round-trip, so the icons render with the message
-		* (exactly like the built-in copy icon). The host Timeline tab still uses the
-		* richer server projection for version-tree / per-block editing.
-		*/
-		function snapshotMessages(nodes) {
-			const result = [];
-			for (let index = 0; index < nodes.length; index += 1) {
-				const node = nodes[index];
-				if (node === void 0) continue;
-				if (node.kind === "user") {
-					const user = node;
-					let turn = 0;
-					for (let j = index + 1; j < nodes.length; j += 1) {
-						const next = nodes[j];
-						if (next?.kind === "assistant") {
-							turn = next.turn;
-							break;
-						}
-						if (next?.kind === "user") break;
-					}
-					for (const [blockIndex, block] of user.content.entries()) {
-						if (block.type !== "text") continue;
-						result.push({
-							key: String(user.seq) + ":" + String(blockIndex),
-							turn,
-							eventSeq: user.seq,
-							blockIndex,
-							kind: "user",
-							text: block.text,
-							time: user.time
-						});
-					}
-				} else if (node.kind === "assistant") {
-					const assistant = node;
-					for (const [blockIndex, block] of assistant.blocks.entries()) {
-						if (block.kind !== "text" && block.kind !== "reasoning") continue;
-						result.push({
-							key: String(assistant.seq) + ":" + String(blockIndex),
-							turn: assistant.turn,
-							eventSeq: assistant.seq,
-							blockIndex,
-							kind: block.kind === "reasoning" ? "assistant.reasoning" : "assistant.response",
-							text: block.text,
-							time: assistant.time
-						});
-					}
-				}
-			}
-			return result;
-		}
-		//#endregion
 		//#region \0dsh-css:D:\dsh\dsh-edit-resend\src\client\InlineEdit.module.css.mjs
 		const css$2 = ".fVO5cq_overlay,.fVO5cq_panel,.fVO5cq_title,.fVO5cq_input,.fVO5cq_footer,.fVO5cq_hint,.fVO5cq_actions,.fVO5cq_save,.fVO5cq_cancel,.fVO5cq_iconButton{box-sizing:border-box}.fVO5cq_iconButton{width:24px;height:24px;color:var(--dsw-alias-label-secondary);cursor:pointer;background:0 0;border:none;border-radius:6px;justify-content:center;align-items:center;padding:0;display:inline-flex}.fVO5cq_iconButton:hover{color:var(--dsw-alias-label-primary);background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_overlay{z-index:1000;background:var(--dsw-alias-bg-mask-1);backdrop-filter:var(--dsw-mask-blur);justify-content:center;align-items:center;padding:24px;display:flex;position:fixed;inset:0}.fVO5cq_panel{z-index:1;border:1px solid var(--dsw-alias-border-inverted);background:var(--dsw-alias-bg-layer-2);width:min(440px,100%);box-shadow:var(--dsw-shadow-lv3);border-radius:20px;flex-direction:column;gap:14px;padding:20px;display:flex;position:relative}.fVO5cq_title{color:var(--dsw-alias-label-primary);margin:0;font-size:15px;font-weight:600;line-height:22px}.fVO5cq_input{border:1px solid var(--dsw-alias-border-l2);background:var(--dsw-specific-input-major);width:100%;min-height:72px;max-height:360px;color:var(--dsw-alias-label-primary);resize:none;border-radius:12px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:22px;overflow-y:auto}.fVO5cq_input:focus{border-color:var(--dsw-alias-state-business-primary);outline:none}.fVO5cq_footer{justify-content:space-between;align-items:center;gap:12px;display:flex}.fVO5cq_hint{color:var(--dsw-alias-label-caption);font-size:12px;line-height:18px}.fVO5cq_actions{flex:none;align-items:center;gap:12px;display:flex}.fVO5cq_save,.fVO5cq_cancel{cursor:pointer;border-radius:17px;justify-content:center;align-items:center;height:34px;padding:0 16px;font-size:14px;line-height:20px;transition:background .15s;display:inline-flex}.fVO5cq_save{background:var(--dsw-alias-button-primary-fill);min-width:92px;color:var(--dsw-alias-label-primary-foreground);border:none}.fVO5cq_save:hover:not(:disabled){background:var(--dsw-alias-button-primary-hover)}.fVO5cq_save:disabled{opacity:.4;cursor:not-allowed}.fVO5cq_cancel{border:1px solid var(--dsw-alias-border-l2);color:var(--dsw-alias-label-primary);background:0 0}.fVO5cq_cancel:hover{background:var(--dsw-alias-interactive-bg-hover)}.fVO5cq_error{background:var(--dsw-alias-interactive-bg-hover-danger);color:var(--dsw-alias-state-error-primary);border-radius:8px;margin:0;padding:8px 10px;font-size:12px;line-height:18px}";
 		const tagId$2 = "dsh-edit-resend/InlineEdit.module.css";
@@ -416,17 +359,17 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var InlineEdit_module_css_default = {
-			"error": "fVO5cq_error",
-			"overlay": "fVO5cq_overlay",
 			"hint": "fVO5cq_hint",
-			"save": "fVO5cq_save",
 			"iconButton": "fVO5cq_iconButton",
 			"panel": "fVO5cq_panel",
 			"title": "fVO5cq_title",
+			"cancel": "fVO5cq_cancel",
+			"overlay": "fVO5cq_overlay",
 			"input": "fVO5cq_input",
-			"footer": "fVO5cq_footer",
+			"error": "fVO5cq_error",
+			"save": "fVO5cq_save",
 			"actions": "fVO5cq_actions",
-			"cancel": "fVO5cq_cancel"
+			"footer": "fVO5cq_footer"
 		};
 		//#endregion
 		//#region src/client/InlineEdit.tsx
@@ -670,24 +613,23 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendHeader_module_css_default = {
-			"stopButton": "k-Flkq_stopButton",
-			"counter": "k-Flkq_counter",
-			"iconButton": "k-Flkq_iconButton",
+			"rerollButton": "k-Flkq_rerollButton",
 			"root": "k-Flkq_root",
 			"error": "k-Flkq_error",
-			"rerollButton": "k-Flkq_rerollButton"
+			"stopButton": "k-Flkq_stopButton",
+			"counter": "k-Flkq_counter",
+			"iconButton": "k-Flkq_iconButton"
 		};
 		//#endregion
 		//#region src/client/EditResendHeader.tsx
 		function EditResendHeader({ useEditResend, useSession, load, openVersion, reroll, stop, edit, retry }) {
 			const state = useEditResend((value) => value);
 			const running = useSession((snapshot) => snapshot.running);
-			const nodes = useSession((snapshot) => snapshot.nodes);
-			const syncMessages = (0, react.useMemo)(() => snapshotMessages(nodes), [nodes]);
+			const timeline = state.timeline;
+			const syncMessages = (0, react.useMemo)(() => timeline === null ? [] : timeline.messages, [timeline]);
 			(0, react.useEffect)(() => {
 				load();
 			}, [load]);
-			const timeline = state.timeline;
 			const undoSessionId = timeline?.undoStack[0];
 			const redoSessionId = timeline?.redoSessionIds.at(-1);
 			const effectDepth = timeline?.undoStack.length ?? 0;
@@ -767,56 +709,56 @@ window.__ModuleLoader__.load({
 			document.head.appendChild(tag);
 		}
 		var EditResendTimelineView_module_css_default = {
-			"messageList": "dvKrZa_messageList",
-			"pageHeader": "dvKrZa_pageHeader",
-			"messageHeader": "dvKrZa_messageHeader",
-			"currentBadge": "dvKrZa_currentBadge",
-			"sectionHeading": "dvKrZa_sectionHeading",
-			"effectButtons": "dvKrZa_effectButtons",
-			"turnsPanel": "dvKrZa_turnsPanel",
-			"effectControls": "dvKrZa_effectControls",
-			"openBadge": "dvKrZa_openBadge",
-			"textButton": "dvKrZa_textButton",
-			"primaryButton": "dvKrZa_primaryButton",
-			"status": "dvKrZa_status",
-			"error": "dvKrZa_error",
-			"turnTitle": "dvKrZa_turnTitle",
-			"empty": "dvKrZa_empty",
-			"versionButton": "dvKrZa_versionButton",
-			"versionDiff": "dvKrZa_versionDiff",
-			"versionDot": "dvKrZa_versionDot",
-			"editorActions": "dvKrZa_editorActions",
-			"title": "dvKrZa_title",
-			"pathBadge": "dvKrZa_pathBadge",
-			"editorHint": "dvKrZa_editorHint",
-			"notice": "dvKrZa_notice",
-			"versionMain": "dvKrZa_versionMain",
-			"turnList": "dvKrZa_turnList",
 			"headerActions": "dvKrZa_headerActions",
+			"sectionHeading": "dvKrZa_sectionHeading",
+			"intro": "dvKrZa_intro",
+			"versionItem": "dvKrZa_versionItem",
+			"versionDiff": "dvKrZa_versionDiff",
+			"turnPreview": "dvKrZa_turnPreview",
+			"pageHeader": "dvKrZa_pageHeader",
+			"editor": "dvKrZa_editor",
+			"editorActions": "dvKrZa_editorActions",
+			"notice": "dvKrZa_notice",
+			"empty": "dvKrZa_empty",
+			"error": "dvKrZa_error",
+			"versionTitle": "dvKrZa_versionTitle",
+			"versionButton": "dvKrZa_versionButton",
+			"count": "dvKrZa_count",
+			"messageTime": "dvKrZa_messageTime",
+			"subtitle": "dvKrZa_subtitle",
+			"effectControls": "dvKrZa_effectControls",
+			"primaryButton": "dvKrZa_primaryButton",
+			"currentBadge": "dvKrZa_currentBadge",
+			"turnList": "dvKrZa_turnList",
+			"messageText": "dvKrZa_messageText",
+			"versionMeta": "dvKrZa_versionMeta",
+			"messageList": "dvKrZa_messageList",
+			"columns": "dvKrZa_columns",
 			"versionList": "dvKrZa_versionList",
+			"versionDot": "dvKrZa_versionDot",
+			"versionsPanel": "dvKrZa_versionsPanel",
+			"textarea": "dvKrZa_textarea",
+			"effectButtons": "dvKrZa_effectButtons",
+			"turnHeader": "dvKrZa_turnHeader",
+			"turnTitle": "dvKrZa_turnTitle",
+			"messageHeader": "dvKrZa_messageHeader",
+			"select": "dvKrZa_select",
+			"editorHint": "dvKrZa_editorHint",
+			"status": "dvKrZa_status",
+			"versionLine": "dvKrZa_versionLine",
+			"turnsPanel": "dvKrZa_turnsPanel",
+			"root": "dvKrZa_root",
+			"title": "dvKrZa_title",
+			"textButton": "dvKrZa_textButton",
+			"messageCard": "dvKrZa_messageCard",
+			"secondaryButton": "dvKrZa_secondaryButton",
+			"pathBadge": "dvKrZa_pathBadge",
 			"turnSection": "dvKrZa_turnSection",
 			"kindBadge": "dvKrZa_kindBadge",
-			"subtitle": "dvKrZa_subtitle",
-			"versionItem": "dvKrZa_versionItem",
-			"count": "dvKrZa_count",
-			"versionLine": "dvKrZa_versionLine",
-			"select": "dvKrZa_select",
-			"messageCard": "dvKrZa_messageCard",
-			"textarea": "dvKrZa_textarea",
-			"turnPreview": "dvKrZa_turnPreview",
-			"versionsPanel": "dvKrZa_versionsPanel",
-			"messageTime": "dvKrZa_messageTime",
-			"messageText": "dvKrZa_messageText",
-			"secondaryButton": "dvKrZa_secondaryButton",
-			"editor": "dvKrZa_editor",
-			"versionMeta": "dvKrZa_versionMeta",
-			"cascadeField": "dvKrZa_cascadeField",
+			"openBadge": "dvKrZa_openBadge",
+			"versionMain": "dvKrZa_versionMain",
 			"effectDepth": "dvKrZa_effectDepth",
-			"versionTitle": "dvKrZa_versionTitle",
-			"intro": "dvKrZa_intro",
-			"turnHeader": "dvKrZa_turnHeader",
-			"columns": "dvKrZa_columns",
-			"root": "dvKrZa_root"
+			"cascadeField": "dvKrZa_cascadeField"
 		};
 		//#endregion
 		//#region src/client/EditResendTimelineView.tsx

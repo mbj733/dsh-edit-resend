@@ -1,6 +1,11 @@
 /** Edit & Resend browser half: Timeline view, header controls, inline edit, and stop-in-flight. */
-import type { ClientContext, SessionId } from '@deepseek-ai/dsh-client-runtime/client'
+import type { Context } from '@deepseek-ai/cordis'
+import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import type {} from '@deepseek-ai/dsh-client-ui-conversation/client'
+import type {} from '@deepseek-ai/dsh-client-connection/client'
+import type {} from '@deepseek-ai/dsh-api-session-controller/client'
+// The slots service typing is declared by ui-renderer's client face.
+import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import { VIEW_ORDER } from '../shared.ts'
 import { EditResendController } from './controller.ts'
 import { EditResendHeader } from './EditResendHeader.tsx'
@@ -8,7 +13,7 @@ import { EditResendTimelineView } from './EditResendTimelineView.tsx'
 
 export const inject = ['slots', 'conversation', 'connection', 'sessions']
 
-export function apply(ctx: ClientContext): void {
+export function apply(ctx: Context): void {
   const controllers = new Map<SessionId, EditResendController>()
   const controllerFor = (sessionId: SessionId): EditResendController => {
     let controller = controllers.get(sessionId)

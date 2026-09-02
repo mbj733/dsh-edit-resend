@@ -1,7 +1,6 @@
 import { useEffect, useMemo, type ReactNode } from 'react'
 import type { InjectFace, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { EditResendFace } from './controller.ts'
-import { snapshotMessages } from './messages.ts'
 import { InlineEdit } from './InlineEdit.tsx'
 import styles from './EditResendHeader.module.css'
 
@@ -19,14 +18,14 @@ export function EditResendHeader({
 }: EditResendHeaderProps): ReactNode {
   const state = useEditResend(value => value)
   const running = useSession(snapshot => snapshot.running)
-  // Zero-latency inline icons: derived synchronously from the session snapshot
-  // (same source the built-in copy icon uses), never gated on the async load().
-  const nodes = useSession(snapshot => snapshot.nodes)
-  const syncMessages = useMemo(() => snapshotMessages(nodes), [nodes])
+  // Inline icons derive from the plugin's OWN host projection (timeline.messages):
+  // the alpha.3 session snapshot no longer carries message nodes, and using the
+  // host contract keeps the plugin coupled only to its own wire schema.
+  const timeline = state.timeline
+  const syncMessages = useMemo(() => timeline === null ? [] : timeline.messages, [timeline])
 
   useEffect(() => { load() }, [load])
 
-  const timeline = state.timeline
   const undoSessionId = timeline?.undoStack[0]
   const redoSessionId = timeline?.redoSessionIds.at(-1)
   const effectDepth = timeline?.undoStack.length ?? 0

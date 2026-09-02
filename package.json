@@ -24,15 +24,18 @@
     "client": {
       "platform": "web",
       "inject": [
+        "@deepseek-ai/dsh-api-session-controller",
         "@deepseek-ai/dsh-client-connection",
-        "@deepseek-ai/dsh-client-runtime",
-        "@deepseek-ai/dsh-client-ui-conversation"
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-slots"
       ]
     }
   },
   "scripts": {
     "build": "node ./scripts/build.mjs",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "link-types": "node ./scripts/link-types.mjs"
   },
   "license": "MIT",
   "keywords": [
@@ -46,15 +49,6 @@
     "timeline"
   ],
   "devDependencies": {
-    "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-agent": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-conversation": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-session": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-session-query": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-workspace": "^0.1.0-rc.6",
     "@types/node": "^24.0.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",

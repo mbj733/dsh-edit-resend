@@ -2,11 +2,11 @@
  * Browser controller for one session's Timeline projection, branch mutations,
  * and stop-in-flight cancellation.
  */
-import type {
-  ClientContext, ConversationSnapshot, ISessions, ObservableSnapshot,
-  SessionFace, SessionId, SessionListState, SnapshotStore,
-} from '@deepseek-ai/dsh-client-runtime/client'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-runtime/client'
+import type { Context } from '@deepseek-ai/cordis'
+import type { ISessions, SessionFace, SessionListState, SessionSnapshot } from '@deepseek-ai/dsh-api-session-controller/client'
+import type { SessionId } from '@deepseek-ai/dsh-session/types'
+import type { ObservableSnapshot, SnapshotStore } from '@deepseek-ai/dsh-client-store'
+import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import {
   EDIT_RESEND_PATH,
   type CascadePolicy, type EditableMessageBlock, type EditResendOperation,
@@ -164,10 +164,12 @@ async function responseValue(response: Response): Promise<unknown> {
  * host projection. History paging (older turns, hasMore/removed/openState) does
  * NOT change the host-side full-log result, so it must not trigger a refetch.
  */
-function conversationRevision(snapshot: ConversationSnapshot): string {
-  let maxTurn = 0
-  for (const turn of snapshot.turnEnds.keys()) if (turn > maxTurn) maxTurn = turn
-  return (snapshot.running ? 'R' : 'r') + ':' + String(maxTurn)
+function conversationRevision(snapshot: SessionSnapshot): string {
+  // alpha.3 split the old snapshot: lifecycle lives on SessionSnapshot (running,
+  // queue), message nodes live in conversation views. Turn completion always
+  // settles 'running' and drains the queue, so running + queue length is a
+  // sufficient refetch key; history-paging fields are deliberately excluded.
+  return (snapshot.running ? 'R' : 'r') + ':' + String(snapshot.queue.length)
 }
 
 function lineageRevision(snapshot: SessionListState, sessionId: SessionId): string {
@@ -215,7 +217,7 @@ export class EditResendController {
   private observing = false
   private readonly navigationWaits = new Set<() => void>()
 
-  constructor(ctx: ClientContext, private readonly sessionId: SessionId) {
+  constructor(ctx: Context, private readonly sessionId: SessionId) {
     this.sessions = ctx.get('sessions') as unknown as ISessions
     this.face = {
       hooks: { editResend: this.store },
