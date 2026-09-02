@@ -10,6 +10,7 @@ import type { Agent, AgentHandle, AgentOptions, AgentSetup } from '@deepseek-ai/
 import type {
   SessionId, Session, SessionEvent, SessionEventType, SurfaceEventType, SurfaceIntent,
 } from '@deepseek-ai/dsh-session'
+import { SessionLogOffset } from '@deepseek-ai/dsh-session'
 import type { SessionLineageNode, SessionRecord, SessionLogSnapshot } from '@deepseek-ai/dsh-session-query'
 import type { AssistantMessage, ContentBlock, UserMessage } from '@deepseek-ai/dsh-llm'
 import type { Workspace } from '@deepseek-ai/dsh-workspace'
@@ -432,7 +433,7 @@ async function withSourceAgent<T>(
     // target never needs the live driver — the version child is rebuilt from
     // the seeded prefix and the log below that boundary is append-only — so
     // plan from a snapshot WITHOUT interrupting the running reply.
-    if (targetsOpenTail(operation, agent.session.events)) {
+    if (targetsOpenTail(operation, agent.session.snapshotEvents())) {
       agent.cancel({ kind: 'user' })
       await agent.whenIdle()
       return await agent.runMaintenance(async () => job(agent))
@@ -445,11 +446,12 @@ async function withSourceAgent<T>(
 
 function inheritedSeed(source: Session, boundary: number): SessionEvent[] {
   if (boundary === -1) return []
-  const boundaryEvent = source.events[boundary]
+  const events = source.snapshotEvents()
+  const boundaryEvent = events[boundary]
   if (boundary < 0 || boundaryEvent === undefined || boundaryEvent.seq !== boundary) {
     throw new Error('分支边界不是连续会话事件。')
   }
-  return source.events.slice(0, boundary + 1)
+  return events.slice(0, boundary + 1)
 }
 
 function appendLogSeedEvent<T extends Exclude<SessionEventType, SurfaceEventType>>(
@@ -491,8 +493,9 @@ function versionSeed(source: Session, plan: OperationPlan): { events: SessionEve
 function sessionPreset(session: Session): string | undefined {
   const header = session.header as unknown as { agentPreset?: string }
   if (header.agentPreset !== undefined) return header.agentPreset
-  for (let index = session.events.length - 1; index >= 0; index -= 1) {
-    const event = session.events[index] as unknown as { type?: string; data?: { agentPreset?: string } } | undefined
+  const events = session.snapshotEvents()
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const event = events[index] as unknown as { type?: string; data?: { agentPreset?: string } } | undefined
     if (event?.type === 'agent-preset/selected' && event.data?.agentPreset !== undefined) {
       return event.data.agentPreset
     }
@@ -521,10 +524,11 @@ async function createVersionAgent(
   const child = await ctx.agents.create({
     sessionId: childId,
     seed: seed.events,
+    inheritedEventCount: SessionLogOffset(seed.inheritedLength),
     meta: {
       ...(source.header.cwd === undefined ? {} : { cwd: source.header.cwd }),
       parentSession: source.id,
-      seedLength: seed.inheritedLength,
+      isSeeded: true,
       ...(agentPreset === undefined ? {} : { agentPreset }),
     },
     agentOptions: options,
@@ -605,7 +609,7 @@ async function runOperation(ctx: Context, operation: EditResendOperation): Promi
     const childId = sessionIdOf('session-' + crypto.randomUUID())
     const inverses: OperationInverse[] = []
     try {
-      const events = source.session.events
+      const events = source.session.snapshotEvents()
       const plan = planOperation(operation, events)
       const options = agentOptions(events, source.options)
       const child = await createVersionAgent(ctx, source.session, childId, plan, options)
@@ -686,7 +690,7 @@ async function timeline(ctx: Context, sessionId: SessionId): Promise<EditResendT
 
   // Cheap in-memory events while the session is live in an agent (the common
   // case during viewing) — avoids readSession's full-log clone + replay pass.
-  const liveEvents = ctx.agents.get(sessionId)?.session.events
+  const liveEvents = ctx.agents.get(sessionId)?.session.snapshotEvents()
   if (liveEvents !== undefined) {
     const lastSeq = liveEvents.at(-1)?.seq ?? -1
     const cached = timelineCache.get(sessionId)
